@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroFlight | Premium Flight Booking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Phosphor Icons for modern SVG icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+    <div class="blob-bg"></div>
+    <div class="blob-bg blob-2"></div>
+
+    <nav class="navbar">
+        <div class="logo">
+            <i class="ph ph-airplane-tilt"></i>
+            <span>AeroFlight</span>
+        </div>
+        <div class="nav-links">
+            <a href="#" class="active">Flights</a>
+            <a href="#">Hotels</a>
+            <a href="#">Deals</a>
+            <button class="btn-outline">Sign In</button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Hero & Search Section -->
+        <section class="hero-section" id="search-section">
+            <div class="hero-text">
+                <h1>Elevate Your Journey.</h1>
+                <p>Discover the world with seamless, premium flight experiences.</p>
+            </div>
+
+            <div class="search-widget glass-panel">
+                <form id="search-form">
+                    <div class="input-group">
+                        <label><i class="ph ph-map-pin"></i> From</label>
+                        <input type="text" id="from-input" placeholder="Origin city or airport" required>
+                    </div>
+                    <div class="input-divider"></div>
+                    <div class="input-group">
+                        <label><i class="ph ph-map-pin-line"></i> To</label>
+                        <input type="text" id="to-input" placeholder="Destination city or airport" required>
+                    </div>
+                    <div class="input-divider"></div>
+                    <div class="input-group">
+                        <label><i class="ph ph-calendar-blank"></i> Departure</label>
+                        <input type="date" id="date-input" required>
+                    </div>
+                    <div class="input-divider"></div>
+                    <div class="input-group">
+                        <label><i class="ph ph-users"></i> Travelers</label>
+                        <select id="travelers-input">
+                            <option>1 Passenger</option>
+                            <option>2 Passengers</option>
+                            <option>3+ Passengers</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary search-btn">
+                        <span>Search Flights</span>
+                        <i class="ph ph-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Loading State -->
+        <div class="loader-container hidden" id="loader">
+            <div class="spinner"></div>
+            <p>Scanning the skies for the best routes...</p>
+        </div>
+
+        <!-- Results Section -->
+        <section class="results-section hidden" id="results-section">
+            <div class="results-header">
+                <h2>Available Flights</h2>
+                <div class="results-meta" id="search-meta">
+                    New York (JFK) <i class="ph ph-arrow-right"></i> London (LHR) • 1 Passenger
+                </div>
+            </div>
+
+            <div class="filters-panel glass-panel">
+                <button class="filter-btn active">Cheapest</button>
+                <button class="filter-btn">Fastest</button>
+                <button class="filter-btn">Best Time</button>
+            </div>
+
+            <div class="flights-list" id="flights-list">
+                <!-- Flight cards will be injected here by JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Booking Modal -->
+    <div class="modal-overlay hidden" id="booking-modal">
+        <div class="modal-content glass-panel">
+            <button class="close-modal" id="close-modal"><i class="ph ph-x"></i></button>
+
+            <div class="modal-header">
+                <h3>Passenger Details</h3>
+                <p>Complete your booking for flight <span id="modal-flight-number"></span></p>
+            </div>
+
+            <div class="flight-summary-mini" id="modal-flight-summary">
+                <!-- Mini summary -->
+            </div>
+
+            <form id="booking-form" class="booking-form">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>First Name</label>
+                        <input type="text" required placeholder="John">
+                    </div>
+                    <div class="input-group">
+                        <label>Last Name</label>
+                        <input type="text" required placeholder="Doe">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" required placeholder="john@example.com">
+                    </div>
+                    <div class="input-group">
+                        <label>Mobile Number</label>
+                        <input type="tel" required placeholder="+1 (555) 000-0000">
+                    </div>
+                </div>
+
+                <div class="class-selection">
+                    <label>Select Cabin Class</label>
+                    <div class="class-options" id="cabin-class-options">
+                        <!-- Radio buttons injected by JS -->
+                    </div>
+                </div>
+
+                <div class="price-summary">
+                    <span>Total Amount</span>
+                    <h2 id="total-price">$0</h2>
+                </div>
+
+                <button type="submit" class="btn-primary w-full">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div class="toast hidden" id="success-toast">
+        <div class="toast-icon">
+            <i class="ph-fill ph-check-circle"></i>
+        </div>
+        <div class="toast-content">
+            <h4>Booking Confirmed!</h4>
+            <p>Your ticket has been sent to your email.</p>
+        </div>
+    </div>
+
+    <!-- Firebase Compat Libraries -->
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
